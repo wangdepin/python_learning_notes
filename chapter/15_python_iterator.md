@@ -106,7 +106,7 @@
 	* 生成器对象自动实现迭代协议，它有一个`.__next__()`方法
 	* 对生成器对象调用`.__next__()`方法会继续生成器函数的运行到下一个`yield`
  	  结果或引发一个`StopIteration`异常
-* `yield`语句会挂起生成器函数并向调用者发送一个值。当下一轮继续时，函数会在上一个`yield`返回后继续执行，其本地变量根据上一轮保持的状态继续使用 
+* `yield`语句会挂起生成器函数并向调用者发送一个值。当下一轮继续时，函数会在上一个`yield`表达式返回后继续执行，其本地变量根据上一轮保持的状态继续使用 
 * 生成器函数运行代码随时间产生一系列的值，而不是一次性计算它们。这会节约内存并允许计算时间分散。  
   ![生成器函数](../imgs/python_15_19.JPG)
 
@@ -117,8 +117,14 @@
 > 返回值是用于生成器函数内部，`yield`表达式默认返回值为`None`；  
 > 而生成值是用于生成器函数外部的迭代返回。  
 
-* 要像启动生成器，可以直接使用`next(generatorable)`函数，或者使用`generatorable.__next__()`方法，也可以使用`generatorable.send(None)`方法
-* `generatorable.send(None)`方法会在下一轮迭代执行的一开始就替换掉`yield`表达式默认的`None`返回值，然后进行迭代
+* 生成器对象必须先启动。启动意味着它第一次运行到`yield`之前挂起    
+  ![启动生成器](../imgs/python_15_20_pre.JPG)
+* 要想启动生成器，可以直接使用`next(generatorable)`函数，也可以使用`generatorable.send(None)`方法，或者
+  `generatorable.__next__()`方法
+  >`next(generatorable)`函数相当于使用`generatorable.send(None)`方法
+* `generatorable.send(None)`方法会在传递`yield`表达式的值（默认为`None`返回值），下一轮迭代从`yield`表达式返回开始
+  >每一轮挂起时，`yield`表达式 yield 一个数，但是并没有返回（挂起了该`yield`表达式）
+
   ![.send()方法](../imgs/python_15_20.JPG)
 
 17.生成器表达式：类似于列表解析，但是它是在圆括号中的，而不是方括号中的。
@@ -134,5 +140,70 @@
   ![生成器表达式](../imgs/python_15_21.JPG)
 
 18.生成器函数可以有`return`，它可以出现在函数内任何地方。生成器函数内遇到`return`则触发`StopIteration`异常，同时`return`的值作为异常说明  
-  ![生成器函数](../imgs/python_15_22.JPG)
+  ![生成器函数的return](../imgs/python_15_22.JPG)
 
+19.可以调用生成器对象的`.close()`方法强制关闭它。这样再次给它`send()`任何信息，都会抛出`StopIteration`异常，表明没有什么可以生成的了  
+  ![生成器的close()方法](../imgs/python_15_23.JPG)
+
+20.`yield from`：从`PEP 380`引入的新特性。  
+
+* `yield from`可以将一个大的生成器切分成小生成器：
+
+  ```
+  def generator(): #该生成器yield数字[0~19]
+	for i in range(10):
+		yield i
+	for j in range(10,20):
+		yield j
+  ```
+  如果你想切分成两个迭代器，可以这么做：
+
+  ```
+  def generator2():
+	for i in range(10):
+		yield i
+  def generator3():
+	for j in range(10):
+		yield j
+  def generator():
+	for i in generator2():
+		yield i
+	for j in generator3():
+		yield j
+  ```
+ 引入`yield from`之后你可以这么做：
+
+	```
+  def generator2():
+	for i in range(10):
+		yield i
+  def generator3():
+	for j in range(10):
+		yield j
+  def generator():
+	yield from generator2()
+	yield from generator3()
+  ```
+
+* `yield from`能实现代理生成器：
+
+  ```
+  def generator():
+	inner_gen=generator2()
+	yield from inner_gen #为了便于说明，这里分两行写
+  gen=generator()
+  ```
+	* 对`inner_gen`迭代产生的每个值都直接作为`gen` yield值
+	* 所有`gen.send(val)`发送到`gen`的值`val`都会被直接传递给`inner_gen`。
+	*  `inner_gen`抛出异常：
+		* 如果`inner_gen`产生了`StopIteration`异常，
+		  则`gen`会继续执行`yield from`之后的语句
+		* 如果对`inner_gen`产生了非`StopIteration`异常，则传导至`gen`中，
+	  	  导致`gen`在执行`yield from`的时候抛出异常
+	* `gen`抛出异常：
+		* 如果`gen`产生了除`GeneratorExit`以外的异常，则该异常直接 throw 到`inner_gen`中
+		* 如果`gen`产生了`GeneratorExit`异常，或者`gen`的`.close()`方法被调用，
+	  	  则`inner_gen`的`.close()`方法被调用。
+	* `gen`中`yield from`表达式求职结果是`inner_gen`迭代结束时抛出的`StopIteration`异常的第一个参数
+	* `inner_gen`中的`return xxx`语句实际上会抛出一个`StopIteration(xxx)`异常，
+	  所以`inner_gen`中的`return`值会成为`gen`中的`yield from`表达式的返回值。
