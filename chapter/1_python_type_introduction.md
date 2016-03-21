@@ -79,5 +79,5 @@ style id2 fill:#ccf,stroke:#f66,stroke-width:2px,stroke-dasharray: 5, 5;
 * 一个操作的意义取决于被操作对象的类型。同样的操作对不同的对象来说意义可能不同，前提是该对象支持该操作
 * 若对象不支持某种操作，则Python会在运行时检测到错误并自动抛出一个异常
 
-15. Python可以在旧版本中开启新版本的特性，只需用在模块文件中使用：
+15.Python可以在旧版本中开启新版本的特性，只需用在模块文件中使用：
   `from __future__ import 特性名`
