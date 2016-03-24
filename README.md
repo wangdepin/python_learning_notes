@@ -4,7 +4,7 @@
     email: huaxz1986@163.com
 **  本文档可用于个人学习目的，不得用于商业目的  **
 -->
-本文档是《learning python》中文第四版的学习笔记，是由我个人做的纸质读书笔记而来。PDF版本可以从百度网盘下载，地址：http://pan.baidu.com/s/1o6VIUeQ
+本文档是《learning python》中文第四版的学习笔记，是由我个人做的纸质读书笔记而来。PDF版本可以从百度网盘下载，地址：http://pan.baidu.com/s/1slN0VjZ
 >* 文档PDF版本可能会滞后于项目进度
 >* 纸质笔记可以从百度网盘下载：http://pan.baidu.com/s/1baRhhW
 >* 个人所作的所有笔记也可以从百度网盘下载：http://pan.baidu.com/s/1boxjIOZ
@@ -18,6 +18,7 @@
 
 # 内容介绍
 本文档一共34个章节。分别为：
+
 1. Python的动态类型介绍
 2. 数字类型
 3. Set类型
