@@ -99,7 +99,7 @@ finally: # 一定会执行这个子句
 
   ![raise与raise e](../imgs/python_29_7.JPG)
 
-7. `assert`语句可能会引起`AssertionError`。其用法为：`assert <test>,<data>`。这等价于：
+7.`assert`语句可能会引起`AssertionError`。其用法为：`assert <test>,<data>`。这等价于：
 
 ```
 if __debug__:
