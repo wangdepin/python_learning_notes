@@ -1,8 +1,3 @@
-<!--
-    作者：华校专
-    email: huaxz1986@163.com
-**  本文档可用于个人学习目的，不得用于商业目的  **
--->
 # 类的高级主题
 1.通过在自定义类中嵌入内置类型，类似委托；这样自定义类就可以实现内置类型的接口。  
 这些接口在内部通过操作嵌入的内置类型来实现。
@@ -142,5 +137,68 @@
 10.多重继承中，超类在`class`语句首行内的顺序很重要。Python搜索继承树时总是根据超类的顺序，从左到右搜索超类。
 
   ![多重继承超类定义顺序](../imgs/python_28_12.JPG)
+
+
+11.类的`.__mro__`属性：类对象的`.__mro__`属性。它是一个`tuple`，里面存放的是类的实例方法名解析时需要查找的类。Python根据该元组中类的前后顺序进行查找。类对象的`.__mro__`列出了`getattr()`函数以及`super()`函数对实例方法名字解析时的类查找顺序。
+
+  ![类的 __mro__属性](../imgs/python_28_13.JPG)
+
+
+* 类的`.__mro__`是动态的，当继承层次改变时它也随之改变
+* 元类可以重写一个类的`.mro()`方法来定义该类的`__.mro__`属性。该方法在类被创建时调用，结果存放在类的`.__mro__`属性中
+
+12.`super()`函数：`super()`返回一个`super`实例对象，它用于代理实例方法/类方法的执行
+
+* `super(class,an_object)`：要求`isinstance(an_object,class)`为真。代理执行了实例方法调用
+* `super(class,class2)`：要求 `issubclass(class2,class)`为真。代理执行了类方法调用
+
+有两种特殊用法：
+
+* `super(class)`：返回一个非绑定的`super`对象
+* 在类的实例方法中，直接调用`super()`，等价于`super(classname,self)`（这里`self`可能是`classname`子类实例）
+* 在类的类方法中，直接调用`super()`，等价于`super(classname,cls)`（这里`cls`可能是`classname`子类）
+
+原理：`super`的原理类似于：
+
+``` 
+def super(cls,instance):
+	mro=instance.__class__.__mro__ #通过 instance生成 mro
+	return mro[mro.index(cls)+1] #查找cls在当前mro中的index,饭后返回cls的下一个元素
+```
+
+示例：
+
+```
+class Root:
+	def method1(self):
+		print("this is Root")
+class B(Root):
+	def method1(self):
+		print("enter B")
+		print(self)
+		super(B,self).method1() #也可以简写为 super().method1()
+		print("leave B")
+class C(Root):
+	def method1(self):
+		print("enter C")
+		print(self)
+		super().method1() #也可以写成super(C,self).method1()
+		print("leave C")
+class D(B,C):
+	pass
+```
+
+* 调用`D().method1()`--> `D`中没有`method1` 
+* `B`中找到（查找规则：`D.__mro__`)  --> 执行`B`中的`method1`。此时`self`为D实例。`D.__mro__`中，`B`的下一个是`C`，因此`super(B,self）.method1()`从类`C`中查找`method1`。
+* 执行`C`的`method1`。此时`self`为D实例。`D.__mro__`中，`C`的下一个是`Root`，因此`super(C,self）.method1()`从类`Root`中查找`method1`。
+* 执行`Root`的`method1`。
+* `print(self)`可以看到，这里的`self`全部为 `D`的实例
+> 类的`classmethod`依次类推
+>
+> 类、实例的属性查找规则没有那么复杂。因为属性变量只是一个变量，它没办法调用`super(...)`函数。
+>只有实例方法和类方法有能力调用`super(...)`函数，才会导致这种规则诞生
+
+  ![super()和self](../imgs/python_28_14.JPG)
+
 
 	
