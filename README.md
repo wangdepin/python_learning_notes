@@ -6,8 +6,8 @@
 -->
 本文档是《learning python》中文第四版的学习笔记，是由我个人做的纸质读书笔记而来。PDF版本可以从百度网盘下载，地址：http://pan.baidu.com/s/1slN0VjZ
 >* 文档PDF版本可能会滞后于项目进度
->* 纸质笔记可以从百度网盘下载：http://pan.baidu.com/s/1baRhhW
->* 个人所作的所有笔记也可以从百度网盘下载：http://pan.baidu.com/s/1boxjIOZ
+>* 纸质笔记可以从百度网盘下载：http://pan.baidu.com/s/1miEkaBu
+>* 个人所作的所有笔记也可以从百度网盘下载：http://pan.baidu.com/s/1boSzlx1
 
   ![文档截图](imgs/picture_all.JPG)
 
