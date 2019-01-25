@@ -5,6 +5,9 @@
 **  本文档可用于个人学习目的，不得用于商业目的  **
 -->
 本文档是《learning python》中文第四版的学习笔记，是由我个人做的纸质读书笔记而来。
+
+另：本人搜集了个人笔记并整理成册，命名为《AI算法工程师手册》，详见:www.huaxiaozhuan.com
+
 >* 文档PDF版本可能会滞后于项目进度
 >* 纸质笔记可以从百度网盘下载：http://pan.baidu.com/s/1miEkaBu
 >* 个人所作的所有笔记也可以从百度网盘下载：http://pan.baidu.com/s/1boSzlx1
